@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
         (authorization ?? '').split(' ')[1],
       );
 
-      request.tokenPayload = data;
+      request.user = data;
 
       return true;
     } catch (e) {
