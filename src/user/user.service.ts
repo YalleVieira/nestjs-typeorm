@@ -77,11 +77,11 @@ export class UserService {
   }
 
   async exists(id: number) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    if (!user) {
+    if (
+      !(await this.prisma.user.count({
+        where: { id },
+      }))
+    ) {
       throw new NotFoundException(`O usuário ${id} não existe!`);
     }
   }
