@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -64,11 +65,18 @@ export class AuthService {
     const user = await this.prisma.user.findFirst({
       where: {
         email,
-        password,
       },
     });
 
+    console.log({ user });
+
     if (!user) {
+      console.log('user n  pasou');
+      throw new UnauthorizedException('E-mail e/ou senha incorretos.');
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      console.log('hash n  pasou');
       throw new UnauthorizedException('E-mail e/ou senha incorretos.');
     }
 
